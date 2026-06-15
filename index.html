@@ -384,6 +384,35 @@ footer {
 footer span,footer a { font-family:'Space Mono',monospace; font-size:.54rem; letter-spacing:.1em; color:rgba(17,17,16,.28); text-decoration:none; }
 footer a:hover { color:var(--fg); }
 .ft-c { font-family:'Space Mono',monospace; font-size:.56rem; letter-spacing:.3em; color:rgba(17,17,16,.18); }
+@media (max-width: 768px) {
+  #c-top svg { height: 36px; }
+  #c-tl, #c-bl, #c-br { display: none; }
+  #c-tr { top:1.2rem; right:1.4rem; font-size:.7rem; padding:.55rem 1rem; }
+
+  #hero { padding: 5rem 6vw 0; }
+  .hl { font-size: clamp(2.6rem, 12vw, 5rem); }
+  #h-sub { font-size: 15px; }
+
+  #ramas {
+    height: auto;
+    flex-direction: column;
+  }
+  #ramas-divider {
+    left: 0; top: 50%;
+    width: 100%; height: 1px;
+    transform: none;
+  }
+  .rama {
+    width: 100%;
+    height: 50vh;
+    padding: 0 0 4vh 0;
+  }
+  #rama-l { border-right: none; border-bottom: 1px solid rgba(30,26,22,.12); }
+  .rama-photo { height: 55%; }
+  .rama-content { padding: 0 6vw; }
+  .rama-title { font-size: clamp(2rem, 7vw, 3rem); }
+  .rama-stat { font-size: clamp(1.2rem, 5vw, 2rem); }
+}
 </style>
 </head>
 <body>
