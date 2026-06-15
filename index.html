@@ -94,7 +94,7 @@ html, body {
 #hero {
   height:100vh; display:flex; flex-direction:column;
   align-items:center; justify-content:center;
-  text-align:center; padding:0 4vw; overflow:hidden;
+  text-align:center; padding:6rem 4vw 0; overflow:hidden;
 }
 .h-eyebrow {
   font-family:'Space Mono',monospace; font-size:.62rem;
@@ -135,6 +135,98 @@ html, body {
 /* SPACERS */
 .sp    { height:80vh; }
 .sp-sm { height:50vh; }
+
+/* RAMAS */
+#ramas {
+  height: 100vh;
+  display: flex;
+  position: relative;
+  overflow: hidden;
+}
+#ramas-divider {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 1px;
+  height: 0;
+  background: rgba(30,26,22,.2);
+  transform: translateX(-50%);
+  z-index: 2;
+}
+.rama {
+  width: 50%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 0 0 6vh 0;
+  opacity: 0;
+  transform: translateY(50px);
+  position: relative;
+}
+.rama-photo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 62%;
+  overflow: hidden;
+  z-index: 0;
+}
+.rama-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(1) contrast(1.1) brightness(0.88);
+  display: block;
+}
+.rama-photo::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 60%;
+  background: linear-gradient(to bottom, transparent, #d6d3cd);
+}
+.rama-content {
+  position: relative;
+  z-index: 1;
+  padding: 0 5vw;
+  margin-top: -3rem;
+}
+.rama-num {
+  font-family: 'Space Mono', monospace;
+  font-size: .65rem;
+  letter-spacing: .2em;
+  color: rgba(30,26,22,.35);
+  margin-bottom: 1.8rem;
+  display: block;
+}
+.rama-title {
+  font-family: 'Helvetica Neue','Helvetica',Arial,sans-serif;
+  font-weight: 300;
+  font-size: clamp(2.6rem, 5vw, 6rem);
+  line-height: .92;
+  letter-spacing: -.03em;
+  color: #1e1a16;
+  margin-bottom: 2rem;
+}
+.rama-stat {
+  font-family: 'Space Mono', monospace;
+  font-size: clamp(1.6rem, 2.8vw, 3rem);
+  font-weight: 400;
+  color: #ee7419;
+  letter-spacing: -.02em;
+  margin-bottom: 1.6rem;
+  display: block;
+}
+.rama-desc {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: .88rem;
+  font-weight: 300;
+  line-height: 1.75;
+  color: rgba(30,26,22,.55);
+  max-width: 34ch;
+}
 
 /* MANIFESTO */
 #manifesto {
@@ -356,6 +448,32 @@ footer a:hover { color:var(--fg); }
     </div>
   </section>
 
+  <section id="ramas">
+    <div id="ramas-divider"></div>
+    <div id="rama-l" class="rama">
+      <div class="rama-photo">
+        <img src="https://picsum.photos/seed/cnc-machine/800/600" alt="">
+      </div>
+      <div class="rama-content">
+        <span class="rama-num">01</span>
+        <h2 class="rama-title">Mecanizado<br>bajo plano</h2>
+        <span class="rama-stat">±0.005 mm</span>
+        <p class="rama-desc">Fabricación de piezas unitarias y en serie a partir de plano técnico. Materiales certificados y control dimensional completo en cada pieza.</p>
+      </div>
+    </div>
+    <div id="rama-r" class="rama">
+      <div class="rama-photo">
+        <img src="https://picsum.photos/seed/precision-gauge/800/600" alt="">
+      </div>
+      <div class="rama-content">
+        <span class="rama-num">02</span>
+        <h2 class="rama-title">Utillajes de<br>verificación</h2>
+        <span class="rama-stat">ISO 9001</span>
+        <p class="rama-desc">Diseño y fabricación de utillajes a medida para el control dimensional en producción. Precisión, repetibilidad y trazabilidad certificada.</p>
+      </div>
+    </div>
+  </section>
+
   <div class="sp"></div>
 
   <section id="manifesto">
@@ -471,49 +589,52 @@ footer a:hover { color:var(--fg); }
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script>
-/* ── CANVAS — light warm-gray atmospheric blobs ── */
+/* ── CANVAS — grain noise con parallax de ratón ── */
 (function() {
   const cv = document.getElementById('bg-canvas');
   const cx = cv.getContext('2d');
-  let W, H;
-  const rsz = () => { W = cv.width = window.innerWidth; H = cv.height = window.innerHeight; };
-  window.addEventListener('resize', rsz); rsz();
+  let W, H, offCanvas, offCtx;
+  let mouseX = 0, mouseY = 0;
+  let targetX = 0, targetY = 0;
 
-  const BLOBS = [
-    { ox:.15, oy:.20, r:.70, sp:.000080, ph:0.0, c:'190,186,178' },
-    { ox:.82, oy:.65, r:.75, sp:.000060, ph:2.1, c:'200,196,189' },
-    { ox:.45, oy:.85, r:.60, sp:.000100, ph:4.4, c:'175,171,163' },
-    { ox:.70, oy:.15, r:.52, sp:.000070, ph:1.5, c:'210,206,199' },
-    { ox:.22, oy:.60, r:.48, sp:.000090, ph:3.8, c:'168,164,156' },
-  ];
-  const DOTS = Array.from({length:35},()=>({
-    x:Math.random(), y:Math.random(),
-    r:Math.random()*.7+.3, op:Math.random()*.12+.04,
-    sp:(.3+Math.random())*.000035, ph:Math.random()*Math.PI*2
-  }));
+  function buildNoise() {
+    offCanvas = document.createElement('canvas');
+    /* lienzo de grano más grande que la pantalla para poder desplazarlo */
+    offCanvas.width  = W + 120;
+    offCanvas.height = H + 120;
+    offCtx = offCanvas.getContext('2d');
+    const img = offCtx.createImageData(offCanvas.width, offCanvas.height);
+    const d = img.data;
+    for (let i = 0; i < d.length; i += 4) {
+      const v = Math.random() * 255 | 0;
+      d[i] = d[i+1] = d[i+2] = v;
+      d[i+3] = Math.random() * 22 | 0; /* opacidad muy baja */
+    }
+    offCtx.putImageData(img, 0, 0);
+  }
 
-  let t = 0;
+  function resize() {
+    W = cv.width  = window.innerWidth;
+    H = cv.height = window.innerHeight;
+    buildNoise();
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  document.addEventListener('mousemove', e => {
+    mouseX = (e.clientX / W - 0.5) * 60;
+    mouseY = (e.clientY / H - 0.5) * 60;
+  });
+
   function frame() {
-    t++;
-    cx.clearRect(0,0,W,H);
-    cx.fillStyle='#d6d3cd'; cx.fillRect(0,0,W,H);
-    BLOBS.forEach(b => {
-      const x=(b.ox+Math.sin(t*b.sp*1000+b.ph)*.16)*W;
-      const y=(b.oy+Math.cos(t*b.sp*720 +b.ph)*.10)*H;
-      const r=b.r*Math.max(W,H);
-      const g=cx.createRadialGradient(x,y,0,x,y,r);
-      g.addColorStop(0,  `rgba(${b.c},.9)`);
-      g.addColorStop(.4, `rgba(${b.c},.35)`);
-      g.addColorStop(1,  `rgba(${b.c},0)`);
-      cx.globalCompositeOperation='source-over';
-      cx.fillStyle=g; cx.fillRect(0,0,W,H);
-    });
-    DOTS.forEach(d => {
-      const x=(d.x+Math.sin(t*d.sp*1000+d.ph)*.04)*W;
-      const y=(d.y+Math.cos(t*d.sp*700 +d.ph)*.03)*H;
-      cx.beginPath(); cx.arc(x,y,d.r,0,Math.PI*2);
-      cx.fillStyle=`rgba(180,176,168,${d.op})`; cx.fill();
-    });
+    /* suavizado del movimiento */
+    targetX += (mouseX - targetX) * 0.06;
+    targetY += (mouseY - targetY) * 0.06;
+
+    cx.clearRect(0, 0, W, H);
+    cx.fillStyle = '#d6d3cd';
+    cx.fillRect(0, 0, W, H);
+    cx.drawImage(offCanvas, -60 + targetX, -60 + targetY);
     requestAnimationFrame(frame);
   }
   frame();
@@ -575,6 +696,20 @@ gsap.to(['#h-scroll','.h-eyebrow'], {
   opacity:0, ease:'none',
   scrollTrigger:{ trigger:'#hero', start:'2% top', end:'20% top', scrub:1 }
 });
+
+/* ── RAMAS — pinned split reveal ── */
+const ramasTl = gsap.timeline({
+  scrollTrigger:{
+    trigger: '#ramas',
+    start: 'top 80%',
+    end: 'top 20%',
+    scrub: 1.2
+  }
+});
+ramasTl
+  .to('#ramas-divider', { height:'100%', ease:'none', duration:1 }, 0)
+  .to('#rama-l', { opacity:1, y:0, ease:'power2.out', duration:1 }, 0.2)
+  .to('#rama-r', { opacity:1, y:0, ease:'power2.out', duration:1 }, 0.6);
 
 /* ── MANIFESTO — pinned word scrub (single scrubbed timeline) ── */
 const mfEl = document.getElementById('mf-text');
