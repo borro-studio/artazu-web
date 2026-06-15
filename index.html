@@ -399,7 +399,7 @@ footer a:hover { color:var(--fg); }
   }
   #ramas-divider {
     left: 0; top: 50%;
-    width: 100%; height: 1px;
+    width: 0; height: 1px;
     transform: none;
   }
   .rama {
@@ -726,19 +726,26 @@ gsap.to(['#h-scroll','.h-eyebrow'], {
   scrollTrigger:{ trigger:'#hero', start:'2% top', end:'20% top', scrub:1 }
 });
 
-/* ── RAMAS — pinned split reveal ── */
-const ramasTl = gsap.timeline({
-  scrollTrigger:{
-    trigger: '#ramas',
-    start: 'top 80%',
-    end: 'top 20%',
-    scrub: 1.2
-  }
+/* ── RAMAS — reveal con línea animada ── */
+const mm = gsap.matchMedia();
+
+mm.add('(min-width: 769px)', () => {
+  const tl = gsap.timeline({
+    scrollTrigger:{ trigger:'#ramas', start:'top 80%', end:'top 20%', scrub:1.2 }
+  });
+  tl.to('#ramas-divider', { height:'100%', ease:'none', duration:1 }, 0)
+    .to('#rama-l', { opacity:1, y:0, ease:'power2.out', duration:1 }, 0.2)
+    .to('#rama-r', { opacity:1, y:0, ease:'power2.out', duration:1 }, 0.6);
 });
-ramasTl
-  .to('#ramas-divider', { height:'100%', ease:'none', duration:1 }, 0)
-  .to('#rama-l', { opacity:1, y:0, ease:'power2.out', duration:1 }, 0.2)
-  .to('#rama-r', { opacity:1, y:0, ease:'power2.out', duration:1 }, 0.6);
+
+mm.add('(max-width: 768px)', () => {
+  const tl = gsap.timeline({
+    scrollTrigger:{ trigger:'#ramas', start:'top 80%', end:'top 20%', scrub:1.2 }
+  });
+  tl.to('#ramas-divider', { width:'100%', ease:'none', duration:1 }, 0)
+    .to('#rama-l', { opacity:1, y:0, ease:'power2.out', duration:1 }, 0.2)
+    .to('#rama-r', { opacity:1, y:0, ease:'power2.out', duration:1 }, 0.6);
+});
 
 /* ── MANIFESTO — pinned word scrub (single scrubbed timeline) ── */
 const mfEl = document.getElementById('mf-text');
