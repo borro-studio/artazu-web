@@ -138,60 +138,36 @@ html, body {
 
 /* RAMAS */
 #ramas {
-  height: 100vh;
-  display: flex;
+  height: 200vh;
   position: relative;
   overflow: hidden;
 }
-#ramas-divider {
+#ramas-svg {
   position: absolute;
-  left: 50%;
-  top: 0;
-  width: 1px;
-  height: 0;
-  background: rgba(30,26,22,.2);
-  transform: translateX(-50%);
-  z-index: 2;
+  inset: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+.rama-rect {
+  fill: none;
+  stroke: rgba(30,26,22,.18);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
 }
 .rama {
-  width: 50%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  padding: 0 0 6vh 0;
+  position: absolute;
+  width: 44%;
+  padding: 3vw;
+}
+#rama-l { top: 10vh; left: 3vw; }
+#rama-r { top: 72vh; right: 3vw; text-align: right; }
+#rama-r .rama-desc { margin-left: auto; }
+.rama-title .word { display: inline-block; }
+.rama-title .word span {
+  display: inline-block;
   opacity: 0;
-  transform: translateY(50px);
-  position: relative;
-}
-.rama-photo {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 62%;
-  overflow: hidden;
-  z-index: 0;
-}
-.rama-photo img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  filter: grayscale(1) contrast(1.1) brightness(0.88);
-  display: block;
-}
-.rama-photo::after {
-  content: '';
-  position: absolute;
-  bottom: 0; left: 0; right: 0;
-  height: 60%;
-  background: linear-gradient(to bottom, transparent, #d6d3cd);
-}
-.rama-content {
-  position: relative;
-  z-index: 1;
-  padding: 0 5vw;
-  margin-top: -3rem;
+  transform: translateX(-14px);
 }
 .rama-num {
   font-family: 'Space Mono', monospace;
@@ -478,28 +454,18 @@ footer a:hover { color:var(--fg); }
   </section>
 
   <section id="ramas">
-    <div id="ramas-divider"></div>
+    <svg id="ramas-svg">
+      <path id="ramas-line" d="" fill="none" stroke="rgba(30,26,22,.18)" stroke-width="1"/>
+    </svg>
     <div id="rama-l" class="rama">
-      <div class="rama-photo">
-        <img src="https://picsum.photos/seed/cnc-machine/800/600" alt="">
-      </div>
-      <div class="rama-content">
-        <span class="rama-num">01</span>
-        <h2 class="rama-title">Mecanizado<br>bajo plano</h2>
-        <span class="rama-stat">±0.005 mm</span>
-        <p class="rama-desc">Fabricación de piezas unitarias y en serie a partir de plano técnico. Materiales certificados y control dimensional completo en cada pieza.</p>
-      </div>
+      <span class="rama-num">01</span>
+      <h2 class="rama-title">Mecanizado bajo plano</h2>
+      <p class="rama-desc">Fabricación de piezas unitarias y en serie a partir de plano técnico. Materiales certificados y control dimensional completo en cada pieza.</p>
     </div>
     <div id="rama-r" class="rama">
-      <div class="rama-photo">
-        <img src="https://picsum.photos/seed/precision-gauge/800/600" alt="">
-      </div>
-      <div class="rama-content">
-        <span class="rama-num">02</span>
-        <h2 class="rama-title">Utillajes de<br>verificación</h2>
-        <span class="rama-stat">ISO 9001</span>
-        <p class="rama-desc">Diseño y fabricación de utillajes a medida para el control dimensional en producción. Precisión, repetibilidad y trazabilidad certificada.</p>
-      </div>
+      <span class="rama-num">02</span>
+      <h2 class="rama-title">Utillajes de verificación</h2>
+      <p class="rama-desc">Diseño y fabricación de utillajes a medida para el control dimensional en producción. Precisión, repetibilidad y trazabilidad certificada.</p>
     </div>
   </section>
 
@@ -726,25 +692,78 @@ gsap.to(['#h-scroll','.h-eyebrow'], {
   scrollTrigger:{ trigger:'#hero', start:'2% top', end:'20% top', scrub:1 }
 });
 
-/* ── RAMAS — reveal con línea animada ── */
-const mm = gsap.matchMedia();
+/* ── RAMAS — path en S estático ── */
+window.addEventListener('load', () => {
+  const section = document.getElementById('ramas');
+  const cardL   = document.getElementById('rama-l');
+  const cardR   = document.getElementById('rama-r');
+  const svg     = document.getElementById('ramas-svg');
+  const path    = document.getElementById('ramas-line');
+  const p = 20; /* padding alrededor de los cards */
+  const r = 16; /* radio de esquinas */
 
-mm.add('(min-width: 769px)', () => {
-  const tl = gsap.timeline({
-    scrollTrigger:{ trigger:'#ramas', start:'top 80%', end:'top 20%', scrub:1.2 }
-  });
-  tl.to('#ramas-divider', { height:'100%', ease:'none', duration:1 }, 0)
-    .to('#rama-l', { opacity:1, y:0, ease:'power2.out', duration:1 }, 0.2)
-    .to('#rama-r', { opacity:1, y:0, ease:'power2.out', duration:1 }, 0.6);
-});
+  const W = section.offsetWidth;
+  const H = section.offsetHeight;
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
 
-mm.add('(max-width: 768px)', () => {
-  const tl = gsap.timeline({
-    scrollTrigger:{ trigger:'#ramas', start:'top 80%', end:'top 20%', scrub:1.2 }
+  const x1 = cardL.offsetLeft - p,   y1 = cardL.offsetTop - p;
+  const w1 = cardL.offsetWidth + p*2, h1 = cardL.offsetHeight + p*2;
+
+  const x2 = cardR.offsetLeft - p,   y2 = cardR.offsetTop - p;
+  const w2 = cardR.offsetWidth + p*2, h2 = cardR.offsetHeight + p*2;
+
+  /* path en S:
+     empieza arriba-derecha del card L → baja → dobla izquierda abajo
+     → baja por el conector izquierdo → dobla derecha → recorre top de card R → baja derecha */
+  const d = `
+    M ${x1} ${y1}
+    L ${x1} ${y1+h1-r}
+    Q ${x1} ${y1+h1} ${x1+r} ${y1+h1}
+    L ${x2+w2-r} ${y1+h1}
+    Q ${x2+w2} ${y1+h1} ${x2+w2} ${y1+h1+r}
+    L ${x2+w2} ${y2+h2}
+  `;
+  path.setAttribute('d', d);
+
+  const len = path.getTotalLength();
+  gsap.set(path, { strokeDasharray: len, strokeDashoffset: len });
+
+  /* split palabras */
+  document.querySelectorAll('.rama-title').forEach(h => {
+    h.innerHTML = h.textContent.trim().split(' ')
+      .map(w => `<span class="rword"><span>${w}</span></span>`)
+      .join(' ');
   });
-  tl.to('#ramas-divider', { width:'100%', ease:'none', duration:1 }, 0)
-    .to('#rama-l', { opacity:1, y:0, ease:'power2.out', duration:1 }, 0.2)
-    .to('#rama-r', { opacity:1, y:0, ease:'power2.out', duration:1 }, 0.6);
+  document.querySelectorAll('.rword span').forEach(s => {
+    gsap.set(s, { opacity:0, x:-12 });
+  });
+
+  const tl = gsap.timeline({
+    scrollTrigger: {
+      trigger: '#ramas',
+      start: 'top 70%',
+      end: 'top 5%',
+      scrub: 1
+    }
+  });
+
+  tl.to(path, { strokeDashoffset: 0, ease:'none', duration: 2 }, 0);
+
+  /* palabras card L */
+  const wL = document.querySelectorAll('#rama-l .rword span');
+  wL.forEach((s, i) => tl.to(s, { opacity:1, x:0, ease:'power1.inOut', duration:.6 }, 0.1 + i*(0.7/wL.length)));
+
+  /* palabras card R — dispara cuando entra en viewport */
+  const wR = document.querySelectorAll('#rama-r .rword span');
+  const tlR = gsap.timeline({
+    scrollTrigger: {
+      trigger: '#rama-r',
+      start: 'top 85%',
+      end: 'top 30%',
+      scrub: 1
+    }
+  });
+  wR.forEach((s, i) => tlR.to(s, { opacity:1, x:0, ease:'power1.inOut', duration:.6 }, i*(0.7/wR.length)));
 });
 
 /* ── MANIFESTO — pinned word scrub (single scrubbed timeline) ── */
