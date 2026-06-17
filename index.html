@@ -6,7 +6,7 @@
 <title>Taller Mecanizado — Precisión Industrial</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,400;1,700&family=Space+Grotesk:wght@300;400;500;600&family=Space+Mono&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,400;1,700&family=DM+Serif+Display:ital@0;1&family=Space+Grotesk:wght@300;400;500;600&family=Space+Mono&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
 
@@ -132,86 +132,30 @@ html, body {
   60%      { opacity:.8;  transform:scaleY(1); }
 }
 
+/* QUÉ OFRECEMOS */
+#que-ofrecemos {
+  min-height: 30vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6vh 6vw 4vh;
+}
+#qo-title {
+  font-family: 'DM Serif Display', Georgia, serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: clamp(3.5rem, 8vw, 9rem);
+  line-height: 1;
+  color: var(--fg);
+  text-align: center;
+  opacity: 0;
+  transform: translateY(40px);
+}
+
 /* SPACERS */
 .sp    { height:80vh; }
 .sp-sm { height:50vh; }
 
-/* RAMAS */
-#ramas {
-  height: 200vh;
-  position: relative;
-  overflow: hidden;
-}
-#ramas-svg {
-  position: absolute;
-  inset: 0;
-  width: 100%; height: 100%;
-  pointer-events: none;
-  z-index: 1;
-}
-.rama-rect {
-  fill: none;
-  stroke: rgba(30,26,22,.18);
-  stroke-width: 1;
-  vector-effect: non-scaling-stroke;
-}
-.rama {
-  position: absolute;
-  width: 44%;
-  padding: 3vw;
-}
-#rama-l { top: 10vh; left: 3vw; }
-#rama-r { top: 72vh; right: 3vw; text-align: right; }
-#rama-r .rama-desc { margin-left: auto; }
-
-@media (max-width: 768px) {
-  #ramas { height: auto; min-height: 100vh; padding: 8vh 0 10vh; overflow: visible; }
-  #ramas-svg { display: none; }
-  .rama { position: relative; width: 90%; left: auto !important; right: auto !important; top: auto !important; margin: 0 auto 10vh; padding: 6vw; }
-  #rama-r { text-align: left; }
-  #rama-r .rama-desc { margin-left: 0; }
-  .rama-title { font-size: clamp(2.2rem, 8vw, 3.5rem); }
-}
-.rama-title .word { display: inline-block; }
-.rama-title .word span {
-  display: inline-block;
-  opacity: 0;
-  transform: translateX(-14px);
-}
-.rama-num {
-  font-family: 'Space Mono', monospace;
-  font-size: .65rem;
-  letter-spacing: .2em;
-  color: rgba(30,26,22,.35);
-  margin-bottom: 1.8rem;
-  display: block;
-}
-.rama-title {
-  font-family: 'Helvetica Neue','Helvetica',Arial,sans-serif;
-  font-weight: 300;
-  font-size: clamp(2.6rem, 5vw, 6rem);
-  line-height: .92;
-  letter-spacing: -.03em;
-  color: #1e1a16;
-  margin-bottom: 2rem;
-}
-.rama-stat {
-  font-family: 'Space Mono', monospace;
-  font-size: clamp(1.6rem, 2.8vw, 3rem);
-  font-weight: 400;
-  color: #ee7419;
-  letter-spacing: -.02em;
-  margin-bottom: 1.6rem;
-  display: block;
-}
-.rama-desc {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: .88rem;
-  font-weight: 300;
-  line-height: 1.75;
-  color: rgba(30,26,22,.55);
-  max-width: 34ch;
-}
 
 /* MANIFESTO */
 #manifesto {
@@ -378,25 +322,6 @@ footer a:hover { color:var(--fg); }
   .hl { font-size: clamp(2.6rem, 12vw, 5rem); }
   #h-sub { font-size: 15px; }
 
-  #ramas {
-    height: auto;
-    flex-direction: column;
-  }
-  #ramas-divider {
-    left: 0; top: 50%;
-    width: 0; height: 1px;
-    transform: none;
-  }
-  .rama {
-    width: 100%;
-    height: 50vh;
-    padding: 0 0 4vh 0;
-  }
-  #rama-l { border-right: none; border-bottom: 1px solid rgba(30,26,22,.12); }
-  .rama-photo { height: 55%; }
-  .rama-content { padding: 0 6vw; }
-  .rama-title { font-size: clamp(2rem, 7vw, 3rem); }
-  .rama-stat { font-size: clamp(1.2rem, 5vw, 2rem); }
 }
 </style>
 </head>
@@ -462,20 +387,9 @@ footer a:hover { color:var(--fg); }
     </div>
   </section>
 
-  <section id="ramas">
-    <svg id="ramas-svg">
-      <path id="ramas-line" d="" fill="none" stroke="rgba(30,26,22,.18)" stroke-width="1"/>
-    </svg>
-    <div id="rama-l" class="rama">
-      <span class="rama-num">01</span>
-      <h2 class="rama-title">Mecanizado bajo plano</h2>
-      <p class="rama-desc">Fabricación de piezas unitarias y en serie a partir de plano técnico. Materiales certificados y control dimensional completo en cada pieza.</p>
-    </div>
-    <div id="rama-r" class="rama">
-      <span class="rama-num">02</span>
-      <h2 class="rama-title">Utillajes de verificación</h2>
-      <p class="rama-desc">Diseño y fabricación de utillajes a medida para el control dimensional en producción. Precisión, repetibilidad y trazabilidad certificada.</p>
-    </div>
+
+  <section id="que-ofrecemos">
+    <h2 id="qo-title">Qué ofrecemos</h2>
   </section>
 
   <div class="sp"></div>
@@ -701,78 +615,18 @@ gsap.to(['#h-scroll','.h-eyebrow'], {
   scrollTrigger:{ trigger:'#hero', start:'2% top', end:'20% top', scrub:1 }
 });
 
-/* ── RAMAS — path en S estático ── */
-window.addEventListener('load', () => {
-  const section = document.getElementById('ramas');
-  const cardL   = document.getElementById('rama-l');
-  const cardR   = document.getElementById('rama-r');
-  const svg     = document.getElementById('ramas-svg');
-  const path    = document.getElementById('ramas-line');
-  const p = 20; /* padding alrededor de los cards */
-  const r = 16; /* radio de esquinas */
 
-  const W = section.offsetWidth;
-  const H = section.offsetHeight;
-  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
-
-  const x1 = cardL.offsetLeft - p,   y1 = cardL.offsetTop - p;
-  const w1 = cardL.offsetWidth + p*2, h1 = cardL.offsetHeight + p*2;
-
-  const x2 = cardR.offsetLeft - p,   y2 = cardR.offsetTop - p;
-  const w2 = cardR.offsetWidth + p*2, h2 = cardR.offsetHeight + p*2;
-
-  /* path en S:
-     empieza arriba-derecha del card L → baja → dobla izquierda abajo
-     → baja por el conector izquierdo → dobla derecha → recorre top de card R → baja derecha */
-  const d = `
-    M ${x1} ${y1}
-    L ${x1} ${y1+h1-r}
-    Q ${x1} ${y1+h1} ${x1+r} ${y1+h1}
-    L ${x2+w2-r} ${y1+h1}
-    Q ${x2+w2} ${y1+h1} ${x2+w2} ${y1+h1+r}
-    L ${x2+w2} ${y2+h2}
-  `;
-  path.setAttribute('d', d);
-
-  const len = path.getTotalLength();
-  gsap.set(path, { strokeDasharray: len, strokeDashoffset: len });
-
-  /* split palabras */
-  document.querySelectorAll('.rama-title').forEach(h => {
-    h.innerHTML = h.textContent.trim().split(' ')
-      .map(w => `<span class="rword"><span>${w}</span></span>`)
-      .join(' ');
-  });
-  document.querySelectorAll('.rword span').forEach(s => {
-    gsap.set(s, { opacity:0, x:-12 });
-  });
-
-  const tl = gsap.timeline({
-    scrollTrigger: {
-      trigger: '#ramas',
-      start: 'top 70%',
-      end: 'top 5%',
-      scrub: 1
-    }
-  });
-
-  tl.to(path, { strokeDashoffset: 0, ease:'none', duration: 2 }, 0);
-
-  /* palabras card L */
-  const wL = document.querySelectorAll('#rama-l .rword span');
-  wL.forEach((s, i) => tl.to(s, { opacity:1, x:0, ease:'power1.inOut', duration:.6 }, 0.1 + i*(0.7/wL.length)));
-
-  /* palabras card R — dispara cuando entra en viewport */
-  const wR = document.querySelectorAll('#rama-r .rword span');
-  const tlR = gsap.timeline({
-    scrollTrigger: {
-      trigger: '#rama-r',
-      start: 'top 85%',
-      end: 'top 30%',
-      scrub: 1
-    }
-  });
-  wR.forEach((s, i) => tlR.to(s, { opacity:1, x:0, ease:'power1.inOut', duration:.6 }, i*(0.7/wR.length)));
+/* ── QUÉ OFRECEMOS — aparece al scroll ── */
+gsap.to('#qo-title', {
+  opacity: 1,
+  y: 0,
+  duration: 1.2,
+  ease: 'power3.out',
+  scrollTrigger: {
+    trigger: '#que-ofrecemos',
+    start: 'top 75%',
+    toggleActions: 'play none none none'
+  }
 });
 
 /* ── MANIFESTO — pinned word scrub (single scrubbed timeline) ── */
