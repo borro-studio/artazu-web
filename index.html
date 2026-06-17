@@ -134,11 +134,10 @@ html, body {
 
 /* QUÉ OFRECEMOS */
 #que-ofrecemos {
-  min-height: 30vh;
+  padding: 10vh 6vw 8vh;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 6vh 6vw 4vh;
 }
 #qo-title {
   font-family: 'DM Serif Display', Georgia, serif;
@@ -146,10 +145,61 @@ html, body {
   font-weight: 400;
   font-size: clamp(3.5rem, 8vw, 9rem);
   line-height: 1;
-  color: var(--fg);
+  color: #1a1a18;
   text-align: center;
   opacity: 0;
   transform: translateY(40px);
+}
+#qo-sub {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(.9rem, 1.2vw, 1.1rem);
+  font-weight: 300;
+  color: rgba(26,26,24,.5);
+  text-align: center;
+  margin-top: 1.8rem;
+  opacity: 0;
+  transform: translateY(20px);
+}
+#qo-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5vw;
+  width: 100%;
+  max-width: 1200px;
+  margin-top: 5vh;
+}
+.qo-card {
+  border: 1px solid rgba(26,26,24,.15);
+  padding: 3.5vw 3vw;
+  opacity: 0;
+  transform: translateY(30px);
+}
+.qo-card-num {
+  font-family: 'Space Mono', monospace;
+  font-size: .6rem;
+  letter-spacing: .25em;
+  color: rgba(26,26,24,.3);
+  display: block;
+  margin-bottom: 2.5rem;
+}
+.qo-card-title {
+  font-family: 'DM Serif Display', Georgia, serif;
+  font-size: clamp(1.8rem, 3vw, 3rem);
+  font-weight: 400;
+  line-height: 1.05;
+  color: #1a1a18;
+  margin-bottom: 1.8rem;
+}
+.qo-card-desc {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: .85rem;
+  font-weight: 300;
+  line-height: 1.8;
+  color: rgba(26,26,24,.5);
+}
+@media (max-width: 768px) {
+  #qo-cards { grid-template-columns: 1fr; gap: 3vw; }
+  .qo-card { padding: 7vw 6vw; }
 }
 
 /* SPACERS */
@@ -390,6 +440,19 @@ footer a:hover { color:var(--fg); }
 
   <section id="que-ofrecemos">
     <h2 id="qo-title">Qué ofrecemos</h2>
+    <p id="qo-sub">Disponemos de dos ramas principales de actividad.</p>
+    <div id="qo-cards">
+      <div class="qo-card">
+        <span class="qo-card-num">01</span>
+        <h3 class="qo-card-title">Mecanizado<br>bajo plano</h3>
+        <p class="qo-card-desc">Fabricación de piezas unitarias y en serie a partir de plano técnico. Materiales certificados y control dimensional completo en cada pieza.</p>
+      </div>
+      <div class="qo-card">
+        <span class="qo-card-num">02</span>
+        <h3 class="qo-card-title">Utillajes de<br>verificación</h3>
+        <p class="qo-card-desc">Diseño y fabricación de utillajes a medida para el control dimensional en producción. Precisión, repetibilidad y trazabilidad certificada.</p>
+      </div>
+    </div>
   </section>
 
   <div class="sp"></div>
@@ -618,15 +681,18 @@ gsap.to(['#h-scroll','.h-eyebrow'], {
 
 /* ── QUÉ OFRECEMOS — aparece al scroll ── */
 gsap.to('#qo-title', {
-  opacity: 1,
-  y: 0,
-  duration: 1.2,
-  ease: 'power3.out',
-  scrollTrigger: {
-    trigger: '#que-ofrecemos',
-    start: 'top 75%',
-    toggleActions: 'play none none none'
-  }
+  opacity: 1, y: 0, duration: 1.2, ease: 'power3.out',
+  scrollTrigger: { trigger: '#que-ofrecemos', start: 'top 75%', toggleActions: 'play none none none' }
+});
+gsap.to('#qo-sub', {
+  opacity: 1, y: 0, duration: 1, ease: 'power3.out', delay: 0.15,
+  scrollTrigger: { trigger: '#que-ofrecemos', start: 'top 70%', toggleActions: 'play none none none' }
+});
+gsap.utils.toArray('.qo-card').forEach((card, i) => {
+  gsap.to(card, {
+    opacity: 1, y: 0, duration: 1, ease: 'power3.out', delay: i * 0.15,
+    scrollTrigger: { trigger: '#qo-cards', start: 'top 80%', toggleActions: 'play none none none' }
+  });
 });
 
 /* ── MANIFESTO — pinned word scrub (single scrubbed timeline) ── */
