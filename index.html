@@ -678,21 +678,23 @@ gsap.to(['#h-scroll','.h-eyebrow'], {
 });
 
 
-/* ── QUÉ OFRECEMOS — aparece al scroll ── */
-gsap.to('#qo-title', {
-  opacity: 1, y: 0, duration: 1.2, ease: 'power3.out',
+/* ── QUÉ OFRECEMOS — entrada ── */
+const qoEnter = gsap.timeline({
   scrollTrigger: { trigger: '#que-ofrecemos', start: 'top 75%', toggleActions: 'play none none none' }
 });
-gsap.to('#qo-sub', {
-  opacity: 1, y: 0, duration: 1, ease: 'power3.out', delay: 0.15,
-  scrollTrigger: { trigger: '#que-ofrecemos', start: 'top 70%', toggleActions: 'play none none none' }
+qoEnter
+  .to('#qo-title', { opacity:1, y:0, duration:1.1, ease:'power4.out' }, 0)
+  .to('#qo-sub',   { opacity:1, y:0, duration:1.0, ease:'power4.out' }, 0.2)
+  .to('.qo-card',  { opacity:1, y:0, duration:1.0, ease:'power4.out', stagger:0.15 }, 0.35);
+
+/* ── QUÉ OFRECEMOS — salida scrubada (igual que hero) ── */
+const qoExit = gsap.timeline({
+  scrollTrigger: { trigger: '#que-ofrecemos', start: 'bottom 80%', end: 'bottom 20%', scrub: 1.5 }
 });
-gsap.utils.toArray('.qo-card').forEach((card, i) => {
-  gsap.to(card, {
-    opacity: 1, y: 0, duration: 1, ease: 'power3.out', delay: i * 0.15,
-    scrollTrigger: { trigger: '#qo-cards', start: 'top 80%', toggleActions: 'play none none none' }
-  });
-});
+qoExit
+  .to('#qo-title', { opacity:0, y:-18, duration:1, ease:'power2.inOut' }, 0)
+  .to('#qo-sub',   { opacity:0, y:-18, duration:1, ease:'power2.inOut' }, 0.3)
+  .to('.qo-card',  { opacity:0, y:-18, duration:1, ease:'power2.inOut', stagger:0.15 }, 0.5);
 
 /* ── MANIFESTO — pinned word scrub (single scrubbed timeline) ── */
 const mfEl = document.getElementById('mf-text');
